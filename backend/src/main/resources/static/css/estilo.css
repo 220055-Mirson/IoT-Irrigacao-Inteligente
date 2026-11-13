@@ -1,0 +1,226 @@
+/* Dashboard do Sistema de Irrigação Inteligente – Grupo 4 */
+
+:root {
+  --verde: #2e7d32;
+  --verde-claro: #e8f5e9;
+  --vermelho: #c62828;
+  --vermelho-claro: #ffebee;
+  --amarelo: #f9a825;
+  --cinza: #6b7280;
+  --cinza-claro: #f3f4f6;
+  --borda: #d9dde3;
+  --texto: #1f2937;
+  --fundo: #f6f8f6;
+  --azul: #1565c0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.45;
+}
+
+/* ---------- Topo ---------- */
+.topo {
+  background: var(--verde);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+.topo h1 { margin: 0; font-size: 1.5rem; }
+.topo p { margin: 2px 0 0; opacity: .9; font-size: .9rem; }
+.indicadores { display: flex; flex-wrap: wrap; gap: 14px; }
+.etiqueta { font-size: .9rem; }
+
+main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 8px; }
+section { margin-bottom: 22px; }
+h2 { margin: 0 0 12px; font-size: 1.15rem; }
+h3 { margin: 0 0 6px; font-size: .95rem; color: var(--cinza); font-weight: 600; }
+
+/* ---------- Selos de estado ---------- */
+.selo {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+  background: var(--cinza-claro);
+  color: var(--cinza);
+}
+.selo.online { background: var(--verde-claro); color: var(--verde); }
+.selo.offline { background: var(--vermelho-claro); color: var(--vermelho); }
+.selo.desconhecido { background: var(--cinza-claro); color: var(--cinza); }
+.topo .selo { background: rgba(255, 255, 255, .92); }
+.topo .selo.online { color: var(--verde); }
+.topo .selo.offline { color: var(--vermelho); }
+
+/* ---------- Avisos ---------- */
+.aviso {
+  background: var(--vermelho-claro);
+  color: var(--vermelho);
+  border: 1px solid var(--vermelho);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.escondido { display: none; }
+
+/* ---------- Cartões ---------- */
+.grelha-cartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+.cartao, .painel {
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 16px;
+}
+.painel { margin-bottom: 0; }
+section.painel { margin-bottom: 22px; }
+.valor { margin: 0; font-size: 2rem; font-weight: 700; }
+.valor.ligada { color: var(--verde); }
+.valor.desligada { color: var(--cinza); }
+.pequeno { margin: 8px 0 0; font-size: .82rem; color: var(--cinza); }
+
+/* ---------- Barra da humidade do solo ---------- */
+.barra {
+  position: relative;
+  height: 12px;
+  margin-top: 10px;
+  background: var(--cinza-claro);
+  border-radius: 6px;
+  border: 1px solid var(--borda);
+}
+.barra-preenchimento {
+  height: 100%;
+  width: 0;
+  border-radius: 6px;
+  background: var(--azul);
+  transition: width .4s;
+}
+.barra-preenchimento.baixo { background: var(--vermelho); }
+.barra-preenchimento.medio { background: var(--amarelo); }
+.barra-preenchimento.alto { background: var(--verde); }
+.marca {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 20px;
+  background: var(--texto);
+}
+
+/* ---------- Duas colunas ---------- */
+.duas-colunas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+.lista-estado { list-style: none; margin: 0; padding: 0; }
+.lista-estado li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--cinza-claro);
+}
+.regra {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: var(--verde-claro);
+  border-radius: 8px;
+  font-size: .88rem;
+}
+.rotulo { margin: 12px 0 6px; font-weight: 600; font-size: .9rem; }
+.rotulo:first-of-type { margin-top: 0; }
+
+/* ---------- Botões ---------- */
+.botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.botao {
+  padding: 9px 16px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--texto);
+  font-size: .92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.botao:hover:not(:disabled) { background: var(--cinza-claro); }
+.botao:disabled { opacity: .5; cursor: not-allowed; }
+.botao.activo { background: var(--verde); border-color: var(--verde); color: #fff; }
+.botao-ligar { border-color: var(--verde); color: var(--verde); }
+.botao-desligar { border-color: var(--vermelho); color: var(--vermelho); }
+.botao-principal { background: var(--verde); border-color: var(--verde); color: #fff; }
+.botao-principal:hover:not(:disabled) { background: #256528; }
+
+/* ---------- Formulário ---------- */
+.campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+label { display: block; font-size: .9rem; font-weight: 600; }
+input[type="number"], select {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.seleccao { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.seleccao select { width: auto; margin: 0; padding: 5px 8px; }
+
+/* ---------- Tabelas ---------- */
+.cabecalho-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.cabecalho-tabela h2 { margin: 0; }
+.tabela-contentor { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--cinza-claro); white-space: nowrap; }
+td.motivo { white-space: normal; min-width: 260px; }
+th { background: var(--cinza-claro); font-weight: 700; }
+td.vazio { text-align: center; color: var(--cinza); padding: 18px; }
+td.ligada { color: var(--verde); font-weight: 700; }
+td.em-curso { color: var(--azul); font-weight: 700; }
+
+/* ---------- Notificação ---------- */
+.notificacao {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+.notificacao.ok { background: var(--verde); }
+.notificacao.erro { background: var(--vermelho); }
+
+.rodape { text-align: center; color: var(--cinza); font-size: .82rem; padding: 12px 16px 26px; }
+
+@media (max-width: 520px) {
+  .valor { font-size: 1.7rem; }
+  .topo h1 { font-size: 1.25rem; }
+}

@@ -1,0 +1,15 @@
+# Backend (Maven)
+backend/target/
+
+# Firmware (PlatformIO)
+firmware/.pio/
+firmware/.vscode/
+
+# Segredos e configuração local
+.env
+*.env
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.idea/

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "author": "Grupo 4",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -150, "left": 140, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -150, "left": -140, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "rele1", "top": 120, "left": 200, "attrs": {} },
+    { "type": "wokwi-resistor", "id": "r1", "top": 230, "left": 300, "attrs": { "value": "220" } },
+    { "type": "wokwi-led", "id": "led1", "top": 210, "left": 400, "attrs": { "color": "blue" } }
+  ],
+  "connections": [
+    ["esp:3V3", "pot1:VCC", "red", []],
+    ["esp:GND.1", "pot1:GND", "black", []],
+    ["esp:34", "pot1:SIG", "green", []],
+    ["esp:3V3", "dht1:VCC", "red", []],
+    ["esp:GND.1", "dht1:GND", "black", []],
+    ["esp:15", "dht1:SDA", "green", []],
+    ["esp:5V", "rele1:VCC", "red", []],
+    ["esp:GND.2", "rele1:GND", "black", []],
+    ["esp:26", "rele1:IN", "orange", []],
+    ["esp:5V", "rele1:COM", "red", []],
+    ["rele1:NO", "r1:1", "purple", []],
+    ["r1:2", "led1:A", "purple", []],
+    ["led1:C", "esp:GND.2", "black", []]
+  ]
+}

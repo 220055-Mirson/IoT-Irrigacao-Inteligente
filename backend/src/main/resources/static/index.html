@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema de Irrigação Inteligente – Grupo 4</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <header class="topo">
+    <div>
+      <h1>Sistema de Irrigação Inteligente</h1>
+      <p>Grupo 4 · Desenvolvimento de Sistemas IoT (DSIo) 2026</p>
+    </div>
+    <div class="indicadores">
+      <span class="etiqueta">Servidor: <strong id="estadoServidor" class="selo desconhecido">A ligar...</strong></span>
+      <span class="etiqueta">ESP32: <strong id="estadoEsp32Topo" class="selo desconhecido">Desconhecido</strong></span>
+    </div>
+  </header>
+
+  <main>
+
+    <div id="aviso" class="aviso escondido"></div>
+
+    <!-- 1. VALORES ACTUAIS -->
+    <section>
+      <h2>Valores actuais</h2>
+      <div class="grelha-cartoes">
+
+        <article class="cartao">
+          <h3>Humidade do solo</h3>
+          <p class="valor" id="valorSolo">—</p>
+          <div class="barra" title="Marcas: limite para ligar e limite para parar">
+            <div class="barra-preenchimento" id="barraSolo"></div>
+            <div class="marca" id="marcaLigar"></div>
+            <div class="marca" id="marcaParar"></div>
+          </div>
+          <p class="pequeno" id="textoLimitesSolo">—</p>
+        </article>
+
+        <article class="cartao">
+          <h3>Temperatura</h3>
+          <p class="valor" id="valorTemperatura">—</p>
+          <p class="pequeno">Variável ambiental (DHT22)</p>
+        </article>
+
+        <article class="cartao">
+          <h3>Humidade do ar</h3>
+          <p class="valor" id="valorHumidadeAr">—</p>
+          <p class="pequeno">Variável ambiental (DHT22)</p>
+        </article>
+
+        <article class="cartao">
+          <h3>Bomba</h3>
+          <p class="valor" id="valorBomba">—</p>
+          <p class="pequeno" id="ultimaLeitura">Sem leituras</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 2. ESTADO E CONTROLO -->
+    <section class="duas-colunas">
+
+      <div class="painel">
+        <h2>Estado do sistema</h2>
+        <ul class="lista-estado">
+          <li><span>ESP32</span><strong id="estadoEsp32" class="selo desconhecido">Desconhecido</strong></li>
+          <li><span>Modo de funcionamento</span><strong id="estadoModo">—</strong></li>
+          <li><span>Bomba (última leitura)</span><strong id="estadoBomba">—</strong></li>
+          <li><span>Irrigação em curso</span><strong id="estadoIrrigacao">—</strong></li>
+        </ul>
+        <p class="regra" id="regraAutomatica">—</p>
+      </div>
+
+      <div class="painel">
+        <h2>Controlo</h2>
+
+        <p class="rotulo">Modo de funcionamento</p>
+        <div class="botoes">
+          <button type="button" id="btnAuto" class="botao">Automático</button>
+          <button type="button" id="btnManual" class="botao">Manual</button>
+        </div>
+
+        <p class="rotulo">Bomba (só no modo manual)</p>
+        <div class="botoes">
+          <button type="button" id="btnLigar" class="botao botao-ligar" disabled>Ligar bomba</button>
+          <button type="button" id="btnDesligar" class="botao botao-desligar" disabled>Desligar bomba</button>
+        </div>
+        <p class="pequeno" id="dicaBomba">Passe para o modo manual para comandar a bomba.</p>
+      </div>
+
+    </section>
+
+    <!-- 3. CONFIGURAÇÃO -->
+    <section class="painel">
+      <h2>Configuração dos limites</h2>
+      <form id="formConfig" novalidate>
+        <div class="campos">
+          <label>
+            Ligar a bomba quando a humidade do solo for inferior a (%)
+            <input type="number" id="limiteLigar" min="0" max="100" step="0.1" required>
+          </label>
+          <label>
+            Desligar a bomba quando a humidade do solo atingir (%)
+            <input type="number" id="limitePara" min="0" max="100" step="0.1" required>
+          </label>
+          <label>
+            Só irrigar se a temperatura for superior a (°C)
+            <input type="number" id="limiteTemperatura" min="-40" max="80" step="0.1" required>
+          </label>
+        </div>
+        <div class="botoes">
+          <button type="submit" id="btnGuardar" class="botao botao-principal">Guardar limites</button>
+        </div>
+        <p class="pequeno" id="ultimaConfig">—</p>
+      </form>
+    </section>
+
+    <!-- 4. HISTÓRICO DAS MEDIÇÕES -->
+    <section class="painel">
+      <div class="cabecalho-tabela">
+        <h2>Histórico das medições</h2>
+        <label class="seleccao">
+          Mostrar
+          <select id="limiteLeituras">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          leituras
+        </label>
+      </div>
+      <div class="tabela-contentor">
+        <table>
+          <thead>
+            <tr>
+              <th>Data e hora</th>
+              <th>Humidade do solo</th>
+              <th>Temperatura</th>
+              <th>Humidade do ar</th>
+              <th>Bomba</th>
+              <th>Modo</th>
+            </tr>
+          </thead>
+          <tbody id="corpoLeituras"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. REGISTO DAS IRRIGAÇÕES -->
+    <section class="painel">
+      <h2>Registo das irrigações</h2>
+      <div class="tabela-contentor">
+        <table>
+          <thead>
+            <tr>
+              <th>Início</th>
+              <th>Fim</th>
+              <th>Duração</th>
+              <th>Motivo</th>
+              <th>Modo</th>
+            </tr>
+          </thead>
+          <tbody id="corpoIrrigacoes"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    Os dados são actualizados automaticamente de 5 em 5 segundos.
+  </footer>
+
+  <div id="notificacao" class="notificacao escondido" role="status"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
